@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const tabelaResultado = document.getElementById('resultadoTableBody');
         tabelaResultado.innerHTML = ''; // Limpa qualquer conteúdo pré-existente na tabela
 
-        // Objeto para armazenar as respostas agrupadas por tipo de comida
+        // Objeto para armazenar as respostas agrupadas por tipo de dom
         const respostasAgrupadas = {
             "Administração": [],
             "Missionário": [],
@@ -85,11 +85,11 @@ document.addEventListener("DOMContentLoaded", function () {
         respostas.forEach(function (resposta) {
             const pergunta = resposta.closest('.question');
             const numeroPergunta = pergunta.id.replace('pergunta', '');
-            const tipoComida = determinarDom(numeroPergunta);
-            respostasAgrupadas[tipoComida].push(parseInt(resposta.value) + 1);
+            const dom = determinarDom(numeroPergunta);
+            respostasAgrupadas[dom].push(parseInt(resposta.value) + 1);
         });
 
-        // Exibe as somas por tipo de comida na tabela
+        // Exibe as somas por tipo de dom na tabela
         Object.keys(respostasAgrupadas).forEach(function (tipo) {
             const soma = respostasAgrupadas[tipo].reduce((acc, curr) => acc + curr, 0); // Calcula a soma das respostas
             const linhaTabela = document.createElement('tr');

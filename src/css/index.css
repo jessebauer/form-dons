@@ -92,6 +92,7 @@ h5 {
     border-color: #dfe20d;
     border-radius: 20px;
     transition: background-color 0.3s ease;
+    color: black;
 }
 
 .btn-primary:hover {
