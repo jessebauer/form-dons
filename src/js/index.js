@@ -26,12 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
         pergunta.classList.remove('d-none'); // Remover a classe 'd-none' para mostrar a pergunta
     });
 
-    const botaoResultadoFixo = document.getElementById('botaoResultadoFixo');
-    botaoResultadoFixo.addEventListener('click', function () {
-        showFinalResult(); // Chame a função que mostra o resultado final
-    });
-
-
     function hideQuestion(question) {
         question.classList.add('d-none');
     }
@@ -89,6 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
             respostasAgrupadas[dom].push(parseInt(resposta.value) + 1);
         });
 
+        
         // Exibe as somas por tipo de dom na tabela
         Object.keys(respostasAgrupadas).forEach(function (tipo) {
             const soma = respostasAgrupadas[tipo].reduce((acc, curr) => acc + curr, 0); // Calcula a soma das respostas
@@ -104,8 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Atualiza a classe ativa para "Resultado" e remove a classe 'unanswered'
         const resultadoLink = document.querySelector('a[href="#resultado"]');
-        resultadoLink.classList.add('active');
-        resultadoLink.classList.remove('unanswered');
 
         // Remove a classe 'active' de todos os outros links de perguntas
         const linksPerguntas = document.querySelectorAll('.nav-link:not([href="#resultado"])');
@@ -114,7 +107,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // Aplica a cor correta ao texto do link de "Resultado"
-        resultadoLink.style.color = '#fff';
     }
 
     function determinarDom(numeroPergunta) {
