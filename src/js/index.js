@@ -88,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Object.keys(respostasAgrupadas).forEach(function (tipo) {
             const soma = respostasAgrupadas[tipo].reduce((acc, curr) => acc + curr, 0); // Calcula a soma das respostas
             const linhaTabela = document.createElement('tr');
+            
             linhaTabela.innerHTML = `
             <td>${tipo}: ${soma}</td>
             `;
