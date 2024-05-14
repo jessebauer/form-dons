@@ -83,15 +83,23 @@ document.addEventListener("DOMContentLoaded", function () {
             respostasAgrupadas[dom].push(parseInt(resposta.value) + 1);
         });
 
-        
-        // Exibe as somas por tipo de dom na tabela
-        Object.keys(respostasAgrupadas).forEach(function (tipo) {
-            const soma = respostasAgrupadas[tipo].reduce((acc, curr) => acc + curr, 0); // Calcula a soma das respostas
+        // Converter objeto em array de pares chave-valor
+        const arrayRespostas = Object.entries(respostasAgrupadas);
+
+        // Ordenar o array com base nos valores das somas em ordem decrescente
+        arrayRespostas.sort((a, b) => {
+            return b[1].reduce((acc, curr) => acc + curr, 0) - a[1].reduce((acc, curr) => acc + curr, 0);
+        });
+
+        // Iterar sobre o array ordenado e criar as células na tabela
+        arrayRespostas.forEach(function (parChaveValor) {
+            const tipo = parChaveValor[0];
+            const soma = parChaveValor[1].reduce((acc, curr) => acc + curr, 0);
             const linhaTabela = document.createElement('tr');
-            
+
             linhaTabela.innerHTML = `
-            <td>${tipo}: ${soma}</td>
-            `;
+    <td>${tipo}: ${soma}</td>
+    `;
             tabelaResultado.appendChild(linhaTabela);
         });
 
