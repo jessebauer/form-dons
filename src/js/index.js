@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const pergunta = resposta.closest('.question');
             const numeroPergunta = pergunta.id.replace('pergunta', '');
             const dom = determinarDom(numeroPergunta);
-            respostasAgrupadas[dom].push(parseInt(resposta.value) + 1);
+            respostasAgrupadas[dom].push(parseInt(resposta.value));
         });
 
         // Converter objeto em array de pares chave-valor
