@@ -67,11 +67,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function scrollToDataNextQuestion(index) {
         let indexCalculated;
         if (index === 1) {
-            indexCalculated = 1;
+            indexCalculated = 0; // Definir para 0 se index for 1
         } else {
-            indexCalculated = ((index * questionsPerPage) - questionsPerPage);
+            indexCalculated = (index * questionsPerPage) - questionsPerPage;
         }
-
+    
         const confirmButton = document.querySelector(`#pergunta${indexCalculated} .confirmar`);
         if (confirmButton) {
             const nextQuestionId = confirmButton.getAttribute('data-next');
