@@ -1,50 +1,112 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function() {
+    const questionsPerPage = 20;
+    const totalQuestions = 120;
+    let currentPage = 1;
+
     const confirmButtons = document.querySelectorAll('.confirmar');
-    confirmButtons.forEach(function (button) {
-        button.addEventListener('click', function () {
-            const currentQuestion = this.parentElement;
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    const questionIndexContainer = document.getElementById('questionIndex');
+    let activeButton = null;
+
+    confirmButtons.forEach(button => {
+        button.addEventListener('click', function() {
             const nextQuestionId = this.getAttribute('data-next');
             const nextQuestion = document.getElementById(nextQuestionId);
-
-            // hideQuestion(currentQuestion);
             if (nextQuestion) {
-                if (nextQuestionId === 'resultado') {
-                    showFinalResult();
-                } else {
-                    showQuestion(nextQuestion);
-                    updateActiveIndex(nextQuestionId);
-                }
-            } else {
-                showFinalResult();
+                nextQuestion.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
 
-    const perguntas = document.querySelectorAll('.question');
+    function showPage(page) {
+        currentPage = page;
+        const startQuestion = (page - 1) * questionsPerPage + 1;
+        const endQuestion = Math.min(page * questionsPerPage, totalQuestions);
 
-    perguntas.forEach(function (pergunta, index) {
-        pergunta.classList.remove('d-none'); // Remover a classe 'd-none' para mostrar a pergunta
+        for (let i = 1; i <= totalQuestions; i++) {
+            const question = document.getElementById(`pergunta${i}`);
+            if (i >= startQuestion && i <= endQuestion) {
+                question.classList.remove('d-none');
+            } else {
+                question.classList.add('d-none');
+            }
+        }
+
+        prevButton.disabled = page === 1;
+        nextButton.disabled = page === Math.ceil(totalQuestions / questionsPerPage);
+
+        // Atualizar a cor do botão de índice
+        const indexButtons = questionIndexContainer.querySelectorAll('button');
+        if (activeButton) {
+            activeButton.style.backgroundColor = ''; // Resetar a cor do botão anterior
+        }
+        activeButton = indexButtons[page - 1]; // Atualizar o botão ativo
+        activeButton.style.backgroundColor = 'lightyellow'; // Definir a cor do novo botão ativo
+
+        // Scroll para a próxima pergunta
+        scrollToDataNextQuestion(page);
+    }
+
+    function createIndexButtons() {
+        for (let i = 1; i <= Math.ceil(totalQuestions / questionsPerPage); i++) {
+            const button = document.createElement('button');
+            button.className = 'btn btn-outline-secondary mx-1';
+            button.innerText = i;
+            if (i === 1) {
+                button.style.backgroundColor = 'lightyellow'; // Definir a cor inicial do botão 1
+                activeButton = button; // Definir o botão 1 como ativo inicialmente
+            }
+            button.addEventListener('click', function() {
+                showPage(i);
+            });
+            questionIndexContainer.appendChild(button);
+        }
+    }
+
+    function scrollToDataNextQuestion(index) {
+        let indexCalculated;
+        if (index === 1) {
+            indexCalculated = 1;
+        } else {
+            indexCalculated = ((index * questionsPerPage) - questionsPerPage);
+        }
+
+        const confirmButton = document.querySelector(`#pergunta${indexCalculated} .confirmar`);
+        if (confirmButton) {
+            const nextQuestionId = confirmButton.getAttribute('data-next');
+            const nextQuestion = document.getElementById(nextQuestionId);
+            if (nextQuestion) {
+                nextQuestion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    }
+
+    prevButton.addEventListener('click', function() {
+        if (currentPage > 1) {
+            showPage(currentPage - 1);
+        }
     });
 
-    function hideQuestion(question) {
-        question.classList.add('d-none');
+    nextButton.addEventListener('click', function() {
+        if (currentPage < Math.ceil(totalQuestions / questionsPerPage)) {
+            showPage(currentPage + 1);
+        }
+    });
+
+
+    window.nextButtonHandler = function() {
+        if (currentPage < Math.ceil(totalQuestions / questionsPerPage)) {
+            showPage(currentPage + 1);
+        }
+        scrollToDataNextQuestion(currentPage + 1);
     }
 
-    function showQuestion(question) {
-        question.classList.remove('d-none');
-        question.scrollIntoView({ behavior: 'smooth' });
-    }
+    const mostrarResultadosButton = document.getElementById('mostrarResultadosButton');
 
-    function updateActiveIndex(activeId) {
-        const links = document.querySelectorAll('.nav-link');
-        links.forEach(function (link) {
-            if (link.getAttribute('href').substring(1) === activeId) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-    }
+    mostrarResultadosButton.addEventListener('click', function () {
+        showFinalResult();
+    });
 
     function showFinalResult() {
         const respostas = document.querySelectorAll('input:checked');
@@ -165,7 +227,29 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function hideQuestion(question) {
+        question.classList.add('d-none');
+    }
 
+    function showQuestion(question) {
+        question.classList.remove('d-none');
+        question.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    prevButton.addEventListener('click', function() {
+        if (currentPage > 1) {
+            showPage(currentPage - 1);
+            updateActiveIndex(`pergunta${(currentPage - 1) * questionsPerPage}`);
+        }
+    });
+
+    nextButton.addEventListener('click', function() {
+        if (currentPage < Math.ceil(totalQuestions / questionsPerPage)) {
+            showPage(currentPage + 1);
+            updateActiveIndex(`pergunta${currentPage * questionsPerPage + 1}`);
+        }
+    });
+
+    createIndexButtons();
+    showPage(currentPage);
 });
-
-
